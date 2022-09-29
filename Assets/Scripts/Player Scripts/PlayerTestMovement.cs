@@ -16,6 +16,7 @@ public class PlayerTestMovement : MonoBehaviour
     //TRIGERS
     bool triggerWallJumpLeft;
     bool triggerWallJumpRight;
+    bool triggerDoubleJump;
 
     // SERIALIZED FIELDS
     [SerializeField] float wallJumpStrength;
@@ -48,6 +49,7 @@ public class PlayerTestMovement : MonoBehaviour
         ResetTriggers();
         WalkDefualt();
         Jump();
+        DoubleJump();
 
     }
 
@@ -62,7 +64,8 @@ public class PlayerTestMovement : MonoBehaviour
     {
 
         //NOR LEFT NOR RIGHT
-        if (triggerWallJumpLeft == false && triggerWallJumpRight == false) {
+        if (triggerWallJumpLeft == false && triggerWallJumpRight == false)
+        {
             body.velocity = new Vector2(Input.GetAxis("Horizontal") * speed, body.velocity.y);
         }
 
@@ -70,10 +73,10 @@ public class PlayerTestMovement : MonoBehaviour
         if (triggerWallJumpLeft == true)
         {
             counterWallJump += frictionFactor * Time.deltaTime;
-            otherForces = new Vector2(Mathf.Clamp(otherForces.x - counterWallJump/otherForces.x, 0, otherSpeed), otherForces.y);
+            otherForces = new Vector2(Mathf.Clamp(otherForces.x - counterWallJump / otherForces.x, 0, otherSpeed), otherForces.y);
 
             //Initial bounce off the wall
-            otherForcesInitialJump = new Vector2(Mathf.Clamp(Time.deltaTime * 10, 0 , otherSpeed), Mathf.Clamp(Time.deltaTime * 10, 0, otherSpeed));
+            otherForcesInitialJump = new Vector2(Mathf.Clamp(Time.deltaTime * 10, 0, otherSpeed), Mathf.Clamp(Time.deltaTime * 10, 0, otherSpeed));
             if (otherForcesInitialJump.x == otherSpeed)
             {
                 otherForcesInitialJump.x = 0;
@@ -83,7 +86,8 @@ public class PlayerTestMovement : MonoBehaviour
 
             if (Input.GetAxis("Horizontal") > 0)
             {
-                if (otherForces.x > 0) {
+                if (otherForces.x != 0)
+                {
                     body.velocity = new Vector2(speed / 2 + otherForces.x, body.velocity.y);
                 }
                 else
@@ -123,7 +127,7 @@ public class PlayerTestMovement : MonoBehaviour
 
             if (Input.GetAxis("Horizontal") < 0)
             {
-                if (otherForces.x <= 0)
+                if (otherForces.x != 0)
                 {
                     body.velocity = new Vector2(-speed / 2 + otherForces.x, body.velocity.y);
                 }
@@ -158,6 +162,7 @@ public class PlayerTestMovement : MonoBehaviour
         {
             if (IsGrounded(doNotCollide))
             {
+                triggerDoubleJump = true;
                 body.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
             }
             else if (IsGroundedLeft(doNotCollide))
@@ -182,6 +187,17 @@ public class PlayerTestMovement : MonoBehaviour
         }
     }
     //END
+
+    // DOUBLE JUMP
+    void DoubleJump()
+    {
+        if (triggerDoubleJump == true && Input.GetKeyDown(KeyCode.W) && IsGrounded(doNotCollide) == false && IsGroundedLeft(doNotCollide) == false && IsGroundedRight(doNotCollide) == false)
+        {
+            body.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
+            triggerDoubleJump = false;
+        }
+    }
+    // END
 
     //Is grounded and touching walls checks methods
 
@@ -212,4 +228,5 @@ public class PlayerTestMovement : MonoBehaviour
         }
     }
     //END
+
 }

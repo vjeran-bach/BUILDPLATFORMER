@@ -60,10 +60,13 @@ public class PlayerTestMovement : MonoBehaviour
     //Walk left and right
     void WalkDefualt()
     {
+
+        //NOR LEFT NOR RIGHT
         if (triggerWallJumpLeft == false && triggerWallJumpRight == false) {
             body.velocity = new Vector2(Input.GetAxis("Horizontal") * speed, body.velocity.y);
         }
 
+        //LEFT
         if (triggerWallJumpLeft == true)
         {
             counterWallJump += frictionFactor * Time.deltaTime;
@@ -101,7 +104,51 @@ public class PlayerTestMovement : MonoBehaviour
                 body.velocity = new Vector2(otherForces.x, body.velocity.y);
             }
         }
+
+        //RIGHT
+
+        if (triggerWallJumpRight == true)
+        {
+            counterWallJump += frictionFactor * Time.deltaTime;
+            otherForces = new Vector2(Mathf.Clamp(otherForces.x + counterWallJump / Mathf.Abs(otherForces.x), -otherSpeed, 0), otherForces.y);
+
+            //Initial bounce off the wall
+            otherForcesInitialJump = new Vector2(Mathf.Clamp(Time.deltaTime * 10, 0, otherSpeed), Mathf.Clamp(Time.deltaTime * 10, 0, otherSpeed));
+            if (otherForcesInitialJump.x == otherSpeed)
+            {
+                otherForcesInitialJump.x = 0;
+            }
+            // END
+
+
+            if (Input.GetAxis("Horizontal") < 0)
+            {
+                if (otherForces.x <= 0)
+                {
+                    body.velocity = new Vector2(-speed / 2 + otherForces.x, body.velocity.y);
+                }
+                else
+                {
+                    body.velocity = new Vector2(-speed, body.velocity.y);
+                }
+                counterWallJump += frictionFactorOnMove * Time.deltaTime;
+            }
+
+            if (Input.GetAxis("Horizontal") > 0)
+            {
+                counterWallJump += frictionFactorOnMove * Time.deltaTime;
+                body.velocity = new Vector2(speed + otherForces.x, body.velocity.y);
+            }
+
+            if (Input.GetAxis("Horizontal") == 0)
+            {
+                body.velocity = new Vector2(otherForces.x, body.velocity.y);
+            }
+        }
+
+
     }
+
     //END
 
     //Jumping

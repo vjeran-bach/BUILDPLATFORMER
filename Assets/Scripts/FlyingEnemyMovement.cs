@@ -27,7 +27,7 @@ public class FlyingEnemyMovement : MonoBehaviour
     void Update()
     {
         
-        GameObject player = GameObject.Find("Player");
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
 
         Vector2 pos = player.transform.position;
 

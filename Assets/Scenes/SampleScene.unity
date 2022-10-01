@@ -139,6 +139,14 @@ PrefabInstance:
       propertyPath: otherSpeed
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: -3440195352215419126, guid: dcb960cd03853a4408847f435ef0a226, type: 3}
+      propertyPath: frictionFactor
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -3440195352215419126, guid: dcb960cd03853a4408847f435ef0a226, type: 3}
+      propertyPath: frictionFactorOnMove
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 4178025767562806560, guid: dcb960cd03853a4408847f435ef0a226, type: 3}
       propertyPath: m_RootOrder
       value: 1
